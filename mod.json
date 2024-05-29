@@ -1,8 +1,10 @@
 {
-  "name": "Mod",
+  "name": "backdoor-mod-pvp",
+  "displayName": "BackdoorPVP",
   "author": "XDITION",
-  "description": "........",
+  "description": "Backdoor for PVP. Your defensive structures are invulnerable as long as you have at least one defensive structure.",
   "version": 0.1,
   "main": "scripts/main.js",
-  "minGameVersion": 146
+  "minGameVersion": 136,
+  "hidden": false
 }
