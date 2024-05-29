@@ -18,7 +18,6 @@ function updateTeamVulnerability(team) {
     Vars.world.tiles.eachTile(tile => {
         if (tile.build != null && tile.build.team === team && !defenseBlocks.includes(tile.build.block.name)) {
             tile.build.health = isVulnerable ? tile.build.maxHealth : Number.MAX_SAFE_INTEGER;
-            tile.build.updateColor();
         }
     });
 
@@ -26,25 +25,26 @@ function updateTeamVulnerability(team) {
 }
 
 function showVulnerabilityEffect(team, isVulnerable) {
-    // Изменение цвета центрального ядра для обозначения уязвимости базы
-    const core = team.core();
-    if (core != null) {
-        core.tint.set(isVulnerable ? Color.red : Color.green);
-    }
+    // Изменение цвета мини-карты для обозначения уязвимости базы
+    const color = isVulnerable ? Color.red : Color.green;
+    const players = Groups.player;
+
+    players.each(player => {
+        if (player.team() === team) {
+            player.team().color.set(color);
+        }
+    });
 }
 
-Events.on(BlockBuildEndEvent, event => {
-    print('BlockBuildEndEvent=============================================')
+Events.on(EventType.BlockBuildEndEvent, event => {
     updateTeamVulnerability(event.team);
 });
 
-Events.on(BlockDestroyEvent, event => {
-    print('BlockDestroyEvent=============================================')
+Events.on(EventType.BlockDestroyEvent, event => {
     updateTeamVulnerability(event.team);
 });
 
 // Начальная проверка при загрузке мода для всех команд
 Groups.player.each(player => {
-    print('LOAD MODE=============================================')
     updateTeamVulnerability(player.team());
 });
