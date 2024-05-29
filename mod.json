@@ -1,0 +1,8 @@
+{
+  "name": "Mod",
+  "author": "XDITION",
+  "description": "........",
+  "version": 0.1,
+  "main": "scripts/main.js",
+  "minGameVersion": 146
+}
