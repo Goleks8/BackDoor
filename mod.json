@@ -3,7 +3,7 @@
   "displayName": "BackdoorPVP",
   "author": "XDITION",
   "description": "Backdoor for PVP. Your defensive structures are invulnerable as long as you have at least one defensive structure.",
-  "version": 0.1,
+  "version": 0.3,
   "main": "scripts/main.js",
   "minGameVersion": 136,
   "hidden": false,
