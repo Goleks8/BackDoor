@@ -6,5 +6,20 @@
   "version": 0.1,
   "main": "scripts/main.js",
   "minGameVersion": 136,
-  "hidden": false
+  "hidden": false,
+  "hideBrowser": false,
+  "settings": {
+    "enableInvincibility": {
+      "name": "Enable Invincibility",
+      "type": "boolean",
+      "default": true,
+      "description": "Enable or disable invincibility for non-defensive blocks."
+    },
+    "invincibilityHealthThreshold": {
+      "name": "Invincibility Health Threshold",
+      "type": "number",
+      "default": 0.5,
+      "description": "Health threshold below which blocks become invincible."
+    }
+  }
 }

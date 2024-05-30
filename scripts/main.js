@@ -1,27 +1,24 @@
-const defenseBlocks = ["turret", "wall", "mendProjector"]; // Типы оборонительных сооружений
+const defenseBlocks = ["turret"]; // Типы оборонительных сооружений
+//TODO//////////////////////////////////////////////////////////////////////////////
+const enableInvincibility = Core.settings.getBool("MyMod-enableInvincibility", true);
+const invincibilityHealthThreshold = Core.settings.getFloat("MyMod-invincibilityHealthThreshold", 0.5);
+print(enableInvincibility);
+print(invincibilityHealthThreshold);
+
 
 function isTeamVulnerable(team) {
     let hasDefense = false;
-
     Vars.world.tiles.eachTile(tile => {
-        if (tile.build != null && tile.build.team === team && defenseBlocks.includes(tile.build.block.name)) {
-            hasDefense = true;
+        if (tile.build != null) {
+            if(defenseBlocks.includes(tile.build.block.category.toString()) && tile.build.team === team){
+                var str = "name: |" + tile.build.block.name +"| category: |" + tile.build.block.category + "| includes - " + defenseBlocks.includes(tile.build.block.category.toString())
+                print(str);
+                hasDefense = true;
+            }
         }
     });
-
-    return !hasDefense;
-}
-
-function updateTeamVulnerability(team) {
-    const isVulnerable = isTeamVulnerable(team);
-
-    Vars.world.tiles.eachTile(tile => {
-        if (tile.build != null && tile.build.team === team && !defenseBlocks.includes(tile.build.block.name)) {
-            tile.build.health = isVulnerable ? tile.build.maxHealth : Number.MAX_SAFE_INTEGER;
-        }
-    });
-
-    showVulnerabilityEffect(team, isVulnerable);
+    showVulnerabilityEffect(team, !hasDefense);
+    return !hasDefense
 }
 
 function showVulnerabilityEffect(team, isVulnerable) {
@@ -36,15 +33,19 @@ function showVulnerabilityEffect(team, isVulnerable) {
     });
 }
 
-Events.on(EventType.BlockBuildEndEvent, event => {
-    updateTeamVulnerability(event.team);
-});
 
 Events.on(EventType.BlockDestroyEvent, event => {
-    updateTeamVulnerability(event.team);
+    isTeamVulnerable(event.team);
 });
 
-// Начальная проверка при загрузке мода для всех команд
-Groups.player.each(player => {
-    updateTeamVulnerability(player.team());
+Events.on(EventType.BlockBuildEndEvent, event => {
+    isTeamVulnerable(event.team);
+});
+
+Events.on(EventType.BuildDamageEvent, event => {
+    const isVulnerable = isTeamVulnerable(event.build.team);
+    if(!isVulnerable){
+        event.build.heal(event.source.damage);
+        Fx.healBlockFull.at(event.build.x, event.build.y, event.build.block.size, Color.white, event.build.block);
+    }
 });
